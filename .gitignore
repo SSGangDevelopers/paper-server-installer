@@ -1,0 +1,12 @@
+test.json
+test.py
+.env
+server
+backup
+backups
+test.txt
+__pycache__
+.idea
+.vscode
+venv
+*.pyc
