@@ -1,2 +1,2 @@
-worker chmod +x inti.sh
-worker ./inti.sh
+worker: chmod +x inti.sh
+worker: ./inti.sh
