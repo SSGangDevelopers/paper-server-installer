@@ -48,11 +48,14 @@ def init(quiet=False):
     with open("server/eula.txt", "r") as f:
         content = f.read()
     with open("server/eula.txt", "w") as f:
-        if utils.is_affirmative(input("Do you accept Mojang's EULA? [y/N] ")) or quiet:
-            f.write(content.replace("eula=false", "eula=true"))
+        if not quiet:
+            if utils.is_affirmative(input("Do you accept Mojang's EULA? [y/N] ")) or quiet:
+                f.write(content.replace("eula=false", "eula=true"))
+            else:
+                print("Abort.")
+                sys.exit(1)
         else:
-            print("Abort.")
-            sys.exit(1)
+            f.write(content.replace("eula=false", "eula=true"))
     print("Starting server...")
     log.run_command_live_output("server/start.sh")
 
