@@ -110,38 +110,32 @@ under certain conditions; in compliance with the GNU GPLv3.
     if QUIET:
         del args[args.index("--quiet")]
 
-    match args:
-        case ["init", *_]:
-            print("Trying to create server directory...")
-            try:
-                os.mkdir("server")
-                init(QUIET)
-            except FileExistsError:
-                if not QUIET:
-                    if utils.is_affirmative(input("The server directory already exists. Do you really want to "
-                                                  "overwrite it? [y/N] ")) or QUIET:
-                        os.system("rm -rf server")
-                        os.mkdir("server")
-                        init()
-                    else:
-                        print("Aborted.")
-                        init()
-                else:
+    if "init" in args:
+        print("Trying to create server directory...")
+        try:
+            os.mkdir("server")
+            init(QUIET)
+        except FileExistsError:
+            if not QUIET:
+                if utils.is_affirmative(input("The server directory already exists. Do you really want to "
+                                              "overwrite it? [y/N] ")) or QUIET:
                     os.system("rm -rf server")
                     os.mkdir("server")
                     init()
-
-        case ["backup", *option]:
-            if option[0] not in ["worlds", "plugins", "logs"] or len(option) != 2:
-                print("Invalid option.")
-            elif option[0] == "all":
-                backup(message=option[1].replace("\"", ""))
+                else:
+                    print("Aborted.")
+                    init()
             else:
-                backup(worlds="worlds" in option, plugins="plugins" in option, logs="logs" in option, message=option[1].replace("\"", ""))
-        case ["help"]:
-            print(HELP)
-        case ["-h"]:
-            print(HELP)
-        case ["--help"]:
-            print(HELP)
-
+                os.system("rm -rf server")
+                os.mkdir("server")
+                init()
+    elif "backup" in args:
+        option = args[args.index("backup") + 1:]
+        if option[0] not in ["worlds", "plugins", "logs"] or len(option) != 2:
+            print("Invalid option.")
+        elif option[0] == "all":
+            backup(message=option[1].replace("\"", ""))
+        else:
+            backup(worlds="worlds" in option, plugins="plugins" in option, logs="logs" in option, message=option[1].replace("\"", ""))
+    elif "help" in args or len(args) == 0 or "-h" in args or "--help" in args:
+        print(HELP)
